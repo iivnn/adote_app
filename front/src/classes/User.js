@@ -4,6 +4,6 @@ export default class User{
         this.name = name;
         this.token = token;
         this.phoneNumber = phoneNumber;
-        this.location = location
+        this.location = location;
     }
 }
