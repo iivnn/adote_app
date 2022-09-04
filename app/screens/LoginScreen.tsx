@@ -1,45 +1,76 @@
 import React from 'react';
-import { FloatingLabel } from 'react-bootstrap';
-import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
-import { View, Text, StyleSheet } from 'react-native';
+import { ImageBackground, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import { Props } from '../navigation/types';
 
-export default function LoginScreen(){
+const LoginScreen = ({ route, navigation }: Props) => {   
     return (
-        <View>
-            <Text style={styles.title} >Adote app</Text>
-
-            <FloatingLabel style={styles.label} controlId="floatingLogin" label="Login" className="mb-3">
-                <Form.Control style={styles.form} type="email" placeholder="name@example.com" />
-            </FloatingLabel>
-
-            <FloatingLabel style={styles.label} controlId="floatingPassword" label="Senha" className="mb-3">
-                <Form.Control style={styles.form} type="password" placeholder="Password" />
-            </FloatingLabel>
-
-            <Button style={styles.button} variant="outline-light">
-                Entrar
-            </Button>
-        </View>        
+        <ImageBackground 
+            source={require("../assets/images/beautiful-pet-portrait-small-dog-cat.jpg")} 
+            resizeMode="cover"
+            style={styles.image}
+            imageStyle={{opacity: 0.5}}
+        >
+            <View style={{flex: 4, alignItems: "center", justifyContent: "center"}}>
+                <Text style={styles.textLogo}>
+                    <FontAwesome5 name={"paw"} brand size={30}/>
+                        &nbsp;adote app
+                </Text>
+            </View>
+            <View style={{flex: 2, alignItems: "center", justifyContent: "flex-end"}}>
+                <Text style={styles.textWelcome}>
+                    Bem-vindo(a) ao aplicativo de adoção de animais de estimação! 👋
+                </Text>
+                <TouchableOpacity style={styles.texteEnterButton}>
+                    <Text>
+                        ENTRAR
+                    </Text>
+                </TouchableOpacity>
+                <Text style={styles.texSignUp}>
+                    É novo por aqui?&nbsp; 
+                    <TouchableWithoutFeedback onPressIn={() => {navigation.navigate("SignUp")} }>
+                        <Text style={{fontWeight: "bold", textDecorationLine: "underline"}}>
+                            Cadastre-se.
+                        </Text>
+                    </TouchableWithoutFeedback>
+                </Text>
+            </View>                           
+        </ImageBackground>
     );
 }
 
 const styles = StyleSheet.create({
-    title: {
-        alignSelf: 'center',
-        marginBottom: 10,
+    image: {
+        flex: 1,
+        flexDirection: 'column',
+        backgroundColor: 'black',
+    },
+    textLogo: {
         color: 'white',
-        fontSize: 20,
-        fontFamily: 'cursive',
+        fontSize: 42,
+        fontWeight: 'bold',
+        marginBottom: 180
     },
-    label: {
+    textWelcome: {
         color: 'white',
-        fontFamily: 'cursive',
+        fontSize: 15,
+        textAlign: 'center',
+        marginBottom: 15
     },
-    form: {
-        opacity: 0.2
+    texteEnterButton: {
+        width: 380,
+        alignItems: 'center',
+        backgroundColor: "white",
+        padding: 12,
+        borderRadius: 30,
+        marginBottom: 160
     },
-    button: {
-        fontFamily: 'cursive',
+    texSignUp: {
+        color: 'white',
+        fontSize: 13,
+        textAlign: 'center',
+        marginBottom: 15
     }
   });
+
+export default LoginScreen;
