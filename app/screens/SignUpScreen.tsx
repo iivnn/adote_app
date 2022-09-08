@@ -1,7 +1,8 @@
 import React from 'react';
 import { ActivityIndicator, Button, ImageBackground, KeyboardAvoidingView, Pressable, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
 import Toast from 'react-native-toast-message';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import IconTextInput, { IconTextInputConfig } from '../components/IconTextInput';
+import Global from '../global/Global';
 import { Props } from '../navigation/types';
 
 const one = (email: string) => {
@@ -11,60 +12,143 @@ const one = (email: string) => {
                 reject("rejeitou")
             else
                 resolve("resolveu")    
-        }, 9000)
+        }, 1000)
     });
 }
 
 const SignUpScreen = ({ route, navigation }: Props) => {
     const [email, setEmail] = React.useState("");
-    const [isEmailInputFocused, setIsEmailInputFocused] = React.useState(false);
     const [isEmailConfirmed, setIsEmailConfirmed] = React.useState(false);
     const [isEmailTouched, setIsEmailTouched] = React.useState(false);
 
-    const [nome, setNome] = React.useState("");
-    const [isNomeInputFocused, setIsNomeInputFocused] = React.useState(false);
+    const [name, setName] = React.useState("");
+    const [isNameTouched, setIsNameTouched] = React.useState(false);
 
     const [phone, setPhone] = React.useState("");
-    const [isPhoneInputFocused, setIsPhoneInputFocused] = React.useState(false);
+    const [isPhoneTouched, setIsPhoneTouched] = React.useState(false);
 
     const [zip, setZip] = React.useState("");
-    const [isZipInputFocused, setIsZipInputFocused] = React.useState(false);
+    const [isZipTouched, setIsZipTouched] = React.useState(false);
 
     const [password, setPassword] = React.useState("");
-    const [isPasswordInputFocused, setIsPasswordInputFocused] = React.useState(false);
+    const [isPasswordTouched, setIsPasswordTouched] = React.useState(false);
 
     const [confirmPassword, setConfirmPassword] = React.useState("");
-    const [isConfirmPasswordInputFocused, setIsConfirmPasswordInputFocused] = React.useState(false);
+    const [isConfirmPasswordTouched, setIsConfirmPasswordTouched] = React.useState(false);
 
     const [isLoading, setIsLoading] = React.useState(false);
 
     const regexEmail = new RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
-
+    
     const confirm_onPressIn = async () => {
         console.log("clicou")
-        setIsLoading(true);       
+        setIsLoading(true);  
         var promise = one(email);
         await promise.then(() => setIsEmailConfirmed(true))
             .catch((e)=>{ 
                 Toast.show({
                     type: 'error',
-                    text1: 'erro',
-                    text2: e,
-                    visibilityTime: 4500                
+                    text1: Date.now().toString(),
+                    text2: "E-mail ja utilizado. awd a asef asef asef asef ase fas efase f",
+                    visibilityTime: 6000,
+
                 })
+                Toast
             })
             .finally(()=>{setIsLoading(false); });
         setIsEmailTouched(true);
     }
+    
+    const signUp_onPressIn = async () => {
+        setIsNameTouched(true);
+        setIsPhoneTouched(true);
+        setIsZipTouched(true);
+        setIsPasswordTouched(true);
+        setIsConfirmPasswordTouched(true);
+
+    }
+
+    const emailIconTextInputConfig = new IconTextInputConfig();
+    emailIconTextInputConfig.icon = "at";
+    emailIconTextInputConfig.keyboardType = "email-address";
+    emailIconTextInputConfig.inputValue = email;
+    emailIconTextInputConfig.onInputValueChanged = setEmail;
+    emailIconTextInputConfig.inputBorderBottomColorOnFocus = Global.Color.MAIN_COLOR;
+    emailIconTextInputConfig.labelFontSize = 30;
+    emailIconTextInputConfig.labelText = "Meu e-mail é";
+    emailIconTextInputConfig.isLoading = isLoading;
+    emailIconTextInputConfig.isEditable = !isEmailConfirmed;
+    emailIconTextInputConfig.isValid = isEmailConfirmed;
+    emailIconTextInputConfig.isTouched = isEmailTouched;
+    emailIconTextInputConfig.invalidIcon = "at";
+    emailIconTextInputConfig.invalidIconColor = "black";
+
+    const nameIconTextInputConfig = new IconTextInputConfig();
+    nameIconTextInputConfig.icon = "user";
+    nameIconTextInputConfig.inputValue = name;
+    nameIconTextInputConfig.keyboardType = "visible-password";
+    nameIconTextInputConfig.onInputValueChanged = setName;
+    nameIconTextInputConfig.inputBorderBottomColorOnFocus = Global.Color.MAIN_COLOR;
+    nameIconTextInputConfig.labelText = "Nome";
+    nameIconTextInputConfig.isLoading = isLoading;
+    nameIconTextInputConfig.isTouched = isNameTouched;
+
+    const phoneIconTextInputConfig = new IconTextInputConfig();
+    phoneIconTextInputConfig.icon = "phone";
+    phoneIconTextInputConfig.keyboardType = "phone-pad";
+    phoneIconTextInputConfig.inputValue = phone;
+    phoneIconTextInputConfig.onInputValueChanged = setPhone;
+    phoneIconTextInputConfig.inputBorderBottomColorOnFocus = Global.Color.MAIN_COLOR;
+    phoneIconTextInputConfig.labelText = "Telefone";
+    phoneIconTextInputConfig.isLoading = isLoading;
+    phoneIconTextInputConfig.isTouched = isPhoneTouched;
+
+    const zipIconTextInputConfig = new IconTextInputConfig();
+    zipIconTextInputConfig.icon = "globe";
+    zipIconTextInputConfig.inputValue = zip;
+    zipIconTextInputConfig.onInputValueChanged = setZip;
+    zipIconTextInputConfig.inputBorderBottomColorOnFocus = Global.Color.MAIN_COLOR;
+    zipIconTextInputConfig.labelText = "CEP";
+    zipIconTextInputConfig.isLoading = isLoading;
+    zipIconTextInputConfig.keyboardType = "numeric";
+    zipIconTextInputConfig.isTouched = isZipTouched;
+
+    const passIconTextInputConfig = new IconTextInputConfig();
+    passIconTextInputConfig.icon = "unlock";
+    passIconTextInputConfig.inputValue = password;   
+    passIconTextInputConfig.onInputValueChanged = setPassword;
+    passIconTextInputConfig.inputBorderBottomColorOnFocus = Global.Color.MAIN_COLOR;
+    passIconTextInputConfig.labelText = "Senha";
+    passIconTextInputConfig.isPassword = true;
+    passIconTextInputConfig.isLoading = isLoading;
+    passIconTextInputConfig.isTouched = isPasswordTouched;
+
+    const confirmPassIconTextInputConfig = new IconTextInputConfig();
+    confirmPassIconTextInputConfig.icon = "unlock";
+    confirmPassIconTextInputConfig.inputValue = confirmPassword;
+    confirmPassIconTextInputConfig.onInputValueChanged = setConfirmPassword;
+    confirmPassIconTextInputConfig.inputBorderBottomColorOnFocus = Global.Color.MAIN_COLOR;
+    confirmPassIconTextInputConfig.labelText = "Confirmar senha";
+    confirmPassIconTextInputConfig.isPassword = true;
+    confirmPassIconTextInputConfig.isLoading = isLoading;
+    confirmPassIconTextInputConfig.isTouched = isConfirmPasswordTouched;
 
     const renderEmailConfirm = () => {
         return(
             <View>
                 <View style={{alignItems: "stretch", justifyContent: "flex-start"}}> 
-                    <Text style={styles.infoText}>Ao clicar em "continuar" será verificado se o e-mail inserido nunca foi utilizado para o cadastro de uma conta. O endereço de e-mail confirmado será utilizado para entrar no aplicativo.</Text>
+                    <Text 
+                        style={{        
+                            color: 'gray',
+                            fontSize: 15,
+                            textAlign: 'justify',
+                            marginTop: 10
+                        }}>
+                            Ao clicar em "continuar" será verificado se o e-mail inserido nunca foi utilizado para o cadastro de uma conta. O endereço de e-mail confirmado será utilizado para entrar no aplicativo.
+                    </Text>
                     <TouchableOpacity 
-                        style={(regexEmail.test(email) && !isLoading) ? styles.texteEnterButtonEnabled : styles.texteEnterButtonDisabled} 
-                        disabled={(!regexEmail.test(email) || isLoading)}
+                        style={ (regexEmail.test(email) && !isLoading) ? styles.textEnterButtonEnabled : styles.textEnterButtonDisabled } 
+                        disabled={ (!regexEmail.test(email) || isLoading) }
                         onPressIn={confirm_onPressIn}>
                             <Text>CONFIRMAR</Text>
                     </TouchableOpacity>
@@ -75,119 +159,30 @@ const SignUpScreen = ({ route, navigation }: Props) => {
 
     const renderAccountForm = () =>{
         return(
-            <View style={{alignItems: "stretch", justifyContent: "flex-start"}}>
-                <Text style={styles.inputText}>
-                    Nome
-                </Text>
-                <View style={styles.emailConfirmSection}>
-                    <FontAwesome5 name={"user"} solid size={20} color="gray" style={!isNomeInputFocused ? styles.icon: styles.iconFocused}/>
-                    <TextInput
-                        style={isNomeInputFocused ? styles.inputEmailFocused : styles.inputEmail}
-                        onChangeText={(event) => setNome(event)}
-                        value={nome}
-                        autoCapitalize={"words"}          
-                        onFocus={()=> {setIsNomeInputFocused(true)}}
-                        onBlur={()=> {setIsNomeInputFocused(false)}}
-                        /> 
-                </View>
-
-                <Text style={styles.inputText}>
-                    Telefone
-                </Text>
-                <View style={styles.emailConfirmSection}>
-                    <FontAwesome5 name={"phone"} solid size={20} color="gray" style={!isPhoneInputFocused ? styles.icon: styles.iconFocused}/>
-                    <TextInput
-                        style={isPhoneInputFocused ? styles.inputEmailFocused : styles.inputEmail}
-                        onChangeText={(event) => setPhone(event)}
-                        value={phone}
-                        autoCapitalize={"none"}
-                        keyboardType={'phone-pad'}           
-                        onFocus={()=> {setIsPhoneInputFocused(true)}}
-                        onBlur={()=> {setIsPhoneInputFocused(false)}}
-                        /> 
-                </View>
-
-                <Text style={styles.inputText}>
-                    CEP
-                </Text>
-                <View style={styles.emailConfirmSection}>
-                    <FontAwesome5 name={"globe"} solid size={20} color="gray" style={!isZipInputFocused ? styles.icon: styles.iconFocused}/>
-                    <TextInput
-                        style={isZipInputFocused ? styles.inputEmailFocused : styles.inputEmail}
-                        onChangeText={(event) => setZip(event)}
-                        value={zip}
-                        autoCapitalize={"none"}
-                        keyboardType={'numeric'}            
-                        onFocus={()=> {setIsZipInputFocused(true)}}
-                        onBlur={()=> {setIsZipInputFocused(false)}}
-                        /> 
-                </View>
-
-                <Text style={styles.inputText}>
-                    Senha
-                </Text>
-                <View style={styles.emailConfirmSection}>
-                    <FontAwesome5 name={"user-lock"} solid size={20} color="gray" style={!isPasswordInputFocused ? styles.icon: styles.iconFocused}/>
-                    <TextInput
-                        style={isPasswordInputFocused ? styles.inputEmailFocused : styles.inputEmail}
-                        onChangeText={(event) => setPassword(event)}
-                        value={password}
-                        autoCapitalize={"none"}
-                        secureTextEntry={true}            
-                        onFocus={()=> {setIsPasswordInputFocused(true)}}
-                        onBlur={()=> {setIsPasswordInputFocused(false)}}
-                        /> 
-                </View> 
-
-                <Text style={styles.inputText}>
-                    Confirmar senha
-                </Text>
-                <View style={styles.emailConfirmSection}>
-                    <FontAwesome5 name={"user-lock"} solid size={20} color="gray" style={!isConfirmPasswordInputFocused ? styles.icon: styles.iconFocused}/>
-                    <TextInput
-                        style={isConfirmPasswordInputFocused ? styles.inputEmailFocused : styles.inputEmail}
-                        onChangeText={(event) => setConfirmPassword(event)}
-                        value={confirmPassword}
-                        autoCapitalize={"none"}
-                        secureTextEntry={true}            
-                        onFocus={()=> {setIsConfirmPasswordInputFocused(true)}}
-                        onBlur={()=> {setIsConfirmPasswordInputFocused(false)}}
-                        /> 
-                </View>        
+            <View>
+                <IconTextInput config={nameIconTextInputConfig}/>
+                <IconTextInput config={phoneIconTextInputConfig}/>
+                <IconTextInput config={zipIconTextInputConfig}/>
+                <IconTextInput config={passIconTextInputConfig}/>
+                <IconTextInput config={confirmPassIconTextInputConfig}/>
+                <TouchableOpacity 
+                        style={ (regexEmail.test(email) && !isLoading) ? styles.textEnterButtonEnabled : styles.textEnterButtonDisabled } 
+                        disabled={ (!regexEmail.test(email) || isLoading) }
+                        onPressIn={signUp_onPressIn}>
+                            <Text>CADASTRAR</Text>
+                    </TouchableOpacity>
             </View>
         )
     }    
 
     return (
         <ScrollView style={styles.container}>
-            <View style={{alignItems: "flex-start", justifyContent: "flex-start"}}>
-                <Text style={styles.myEmailText}>
-                    Meu e-mail é
-                </Text>
-            </View>
-            <View style={{alignItems: "stretch", justifyContent: "flex-start"}}>
-                <View style={styles.emailConfirmSection}>
-                    {(!isEmailConfirmed && !isEmailTouched) && <FontAwesome5 name={"at"} solid size={20} color="grey" style={!isEmailInputFocused ? styles.icon: styles.iconFocused}/>}
-                    {(!isEmailConfirmed && isEmailTouched && !isLoading) && <FontAwesome5 name={"times"} solid size={20} color="red" style={!isEmailInputFocused ? styles.icon: styles.iconFocused}/>}
-                    {isEmailConfirmed && <FontAwesome5 name={"check"} solid size={20} color="green" style={!isEmailInputFocused ? styles.icon: styles.iconFocused}/>}
-                    <TextInput
-                        style={isEmailInputFocused ? styles.inputEmailFocused : styles.inputEmail}
-                        onChangeText={(event) => setEmail(event)}
-                        value={email}
-                        autoCapitalize={"none"}
-                        keyboardType={'email-address'} 
-                        editable={!isLoading && !isEmailConfirmed}
-                        selectTextOnFocus={!isLoading && !isEmailConfirmed}              
-                        onFocus={()=> {setIsEmailInputFocused(true)}}
-                        onBlur={()=> {setIsEmailInputFocused(false)}}
-                    />
-                </View>                 
-            </View>
+            <IconTextInput config={emailIconTextInputConfig}/>
             {
                 !isEmailConfirmed ? renderEmailConfirm() : renderAccountForm()
             }           
             <View style={{alignItems: "stretch", justifyContent: "flex-end"}}>
-                <ActivityIndicator size="large" color="mediumturquoise" animating={isLoading} style={{marginTop: 200}}/>
+                <ActivityIndicator size="large" color={Global.Color.MAIN_COLOR} animating={isLoading} style={{marginTop: 100}}/>
             </View>            
         </ScrollView >
     );
@@ -196,74 +191,21 @@ const SignUpScreen = ({ route, navigation }: Props) => {
 const styles = StyleSheet.create({
     container: {
         backgroundColor: 'white',
-        paddingHorizontal: 38
+        paddingHorizontal: 25
     },
-    myEmailText: {
-        color: 'black',
-        fontSize: 32,
-        marginBottom: 15,
-        paddingTop: 5
-    },
-    inputEmail: {
-        flex: 1,
-        height: 50,
-        borderBottomWidth: 2,
-        padding: 10,
-        fontSize: 20,
-        marginBottom: 30,
-        borderBottomColor: 'black'
-    },
-    inputEmailFocused: {
-        flex: 1,
-        height: 50,
-        borderBottomWidth: 2,
-        padding: 10,
-        fontSize: 20,
-        marginBottom: 30,
-        borderBottomColor: 'mediumturquoise'
-    },
-    infoText: {
-        color: 'gray',
-        fontSize: 15,
-        textAlign: 'justify'
-    },
-    texteEnterButtonDisabled: {
+    textEnterButtonDisabled: {
         alignItems: 'center',
         backgroundColor: 'lightgrey',
         padding: 12,
         borderRadius: 30,
         marginTop: 30
     },
-    texteEnterButtonEnabled: {
+    textEnterButtonEnabled: {
         alignItems: 'center',
         backgroundColor: 'mediumturquoise',
         padding: 12,
         borderRadius: 30,
         marginTop: 30
-    },
-    emailConfirmSection: {
-        flex: 1,
-        flexDirection: 'row',
-        alignItems: 'flex-end',
-        backgroundColor: '#fff',
-    },
-    icon:{
-        paddingBottom: 10,
-        borderBottomWidth: 2,
-        borderBottomColor: 'black',
-        marginBottom: 30,
-    },
-    iconFocused:{
-        paddingBottom: 10,
-        borderBottomWidth: 2,
-        borderBottomColor: 'mediumturquoise',
-        marginBottom: 30,
-    },
-    inputText:{
-        alignSelf: 'flex-start',
-        color: 'black',
-        fontSize: 15,
-        textAlign: 'center',
     }
   });
 

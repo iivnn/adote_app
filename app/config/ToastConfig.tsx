@@ -1,12 +1,11 @@
 import React from 'react';
 import { BaseToast, ErrorToast, InfoToast } from 'react-native-toast-message';
-import Colors from './ColorConfig';
 
 export const toastConfig = {
   success: (props: any) => (
     <BaseToast
       {...props}
-      style={{borderLeftColor: Colors.success}}
+      style={{borderLeftColor: 'green'}}
       text1Style={{
         fontSize: 15,
       }}
@@ -19,7 +18,7 @@ export const toastConfig = {
   error: (props: any) => (
     <ErrorToast
       {...props}    
-      style={{borderLeftColor: Colors.danger}}
+      style={{borderLeftColor: 'red'}}
       text1Style={{
         fontSize: 15
       }}
@@ -32,7 +31,7 @@ export const toastConfig = {
   info: (props: any) => (
     <InfoToast
       {...props}    
-      style={{borderLeftColor: Colors.info}}
+      style={{borderLeftColor: 'deepskyblue'}}
       text1Style={{
         fontSize: 15
       }}

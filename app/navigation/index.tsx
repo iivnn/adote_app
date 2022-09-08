@@ -4,6 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import React from "react";
 import LoginScreen from "../screens/LoginScreen";
 import SignUpScreen from "../screens/SignUpScreen";
+import Testcreen from "../screens/TestScreen";
 import { RootStackParamList } from "./types";
 
 export default function Navigation() {
@@ -18,7 +19,8 @@ const Stack = createStackNavigator<RootStackParamList>();
 
 function RootNavigator() {
   return (
-    <Stack.Navigator>        
+    <Stack.Navigator> 
+        {/* <Stack.Screen name="Test" component={Testcreen} options={{ headerShown: false }} />        */}
         <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
         <Stack.Screen name="SignUp" component={SignUpScreen} options={{ headerShadowVisible: false, title: '' }} />
         <Stack.Screen name="Root" component={RootStackScreen} options={{ headerShown: true}} />     
