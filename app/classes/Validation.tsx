@@ -40,4 +40,19 @@ export class Validation{
         if(!valid)
             this._errors.push(message)
     }
+
+    minLenght(length: number, message: string = "Tamanho mínimo inválido."){
+        let valid = true
+        if(typeof this._target != "string"){
+            valid = false;
+        }
+
+        const regexEmail = new RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
+        if(!regexEmail.test(this._target as unknown as string)){
+            valid = false;
+        }
+
+        if(!valid)
+            this._errors.push(message)
+    }
 }

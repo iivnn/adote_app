@@ -1,6 +1,7 @@
 import React from 'react';
 import { ActivityIndicator, Button, ImageBackground, KeyboardAvoidingView, Pressable, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
 import Toast from 'react-native-toast-message';
+import User from '../classes/User';
 import IconTextInput, { IconTextInputConfig } from '../components/IconTextInput';
 import Global from '../global/Global';
 import { Props } from '../navigation/types';
@@ -41,22 +42,18 @@ const SignUpScreen = ({ route, navigation }: Props) => {
     const regexEmail = new RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
     
     const confirm_onPressIn = async () => {
-        console.log("clicou")
-        setIsLoading(true);  
-        var promise = one(email);
-        await promise.then(() => setIsEmailConfirmed(true))
-            .catch((e)=>{ 
-                Toast.show({
-                    type: 'error',
-                    text1: Date.now().toString(),
-                    text2: "E-mail ja utilizado. awd a asef asef asef asef ase fas efase f",
-                    visibilityTime: 6000,
-
-                })
-                Toast
-            })
-            .finally(()=>{setIsLoading(false); });
-        setIsEmailTouched(true);
+        setIsLoading(true);
+        User.isEmailAvailable(email)
+        .then((response) => {
+            console.log("🚀 ~ file: SignUpScreen.tsx ~ line 48 ~ .then ~ response", response)            
+        })
+        .catch((error) => {
+            console.log("🚀 ~ file: SignUpScreen.tsx ~ line 51 ~ constconfirm_onPressIn= ~ error", error)         
+        })
+        .finally(()=>{
+            setIsLoading(false);
+            setIsEmailTouched(true);
+        })       
     }
     
     const signUp_onPressIn = async () => {
@@ -68,11 +65,16 @@ const SignUpScreen = ({ route, navigation }: Props) => {
 
     }
 
+    const emailIconTextInputConfig_onInputValueChanged = (e: string) =>{
+        setEmail(e);
+        setIsEmailTouched(false);
+    }
+
     const emailIconTextInputConfig = new IconTextInputConfig();
     emailIconTextInputConfig.icon = "at";
     emailIconTextInputConfig.keyboardType = "email-address";
     emailIconTextInputConfig.inputValue = email;
-    emailIconTextInputConfig.onInputValueChanged = setEmail;
+    emailIconTextInputConfig.onInputValueChanged = emailIconTextInputConfig_onInputValueChanged;
     emailIconTextInputConfig.inputBorderBottomColorOnFocus = Global.Color.MAIN_COLOR;
     emailIconTextInputConfig.labelFontSize = 30;
     emailIconTextInputConfig.labelText = "Meu e-mail é";
@@ -80,8 +82,8 @@ const SignUpScreen = ({ route, navigation }: Props) => {
     emailIconTextInputConfig.isEditable = !isEmailConfirmed;
     emailIconTextInputConfig.isValid = isEmailConfirmed;
     emailIconTextInputConfig.isTouched = isEmailTouched;
-    emailIconTextInputConfig.invalidIcon = "at";
-    emailIconTextInputConfig.invalidIconColor = "black";
+    emailIconTextInputConfig.invalidIcon = "times";
+    emailIconTextInputConfig.invalidIconColor = "red";
 
     const nameIconTextInputConfig = new IconTextInputConfig();
     nameIconTextInputConfig.icon = "user";

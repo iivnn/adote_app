@@ -1,4 +1,6 @@
+import axios from "axios";
 import CryptoJS from "crypto-js";
+import Global from "../global/Global";
 
 export default class User{
 
@@ -47,5 +49,36 @@ export default class User{
     //other
     private static encrypt(data: string): string{
         return CryptoJS.AES.encrypt(data, "adote_app").toString();
-    }   
+    }
+    
+    static async isEmailAvailable(email: string){
+        try{
+            const x = axios.create({
+                baseURL: 'http://192.168.1.39:5083'
+            })
+            console.log("🚀 ~ file: User.tsx ~ line 59 ~ User ~ isEmailAvailable ~ x", x)
+            console.log("🚀 ~ file: User.tsx ~ line 61 ~ User ~ isEmailAvailable ~ x.getUri", x.getUri())
+            const r = x.get("user", {
+                params: {email: "awdawdaw"}
+            })
+            console.log("🚀 ~ file: User.tsx ~ line 61 ~ User ~ isEmailAvailable ~ kkkkk", (await r).config)
+
+            console.log("🚀 ~ file: User.tsx ~ line 64 ~ User ~ isEmailAvailable ~ r", r)
+
+            r.then((v) => {
+                console.log("🚀 ~ file: User.tsx ~ line 63 ~ User ~ isEmailAvailable ~ v", v.data)
+            })
+            .catch(function (error) {
+                console.log("🚀 ~ file: User.tsx ~ line 72 ~ User ~ isEmailAvailable ~ error", error)
+                console.log(JSON.stringify(error))
+
+                          
+            })
+            
+        }catch(ex){
+            console.log("🚀 ~ file: User.tsx ~ line 69 ~ User ~ isEmailAvailable ~ ex", ex)   
+            console.log(JSON.stringify(ex))         
+        }
+
+    }
 }

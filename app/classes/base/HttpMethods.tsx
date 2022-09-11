@@ -1,48 +1,50 @@
-import { AppConfig } from "../../config/AppConfig";
+import Global from "../../global/Global";
 
-export default abstract class Base {
+export default abstract class HttpMethods<T> {
+    private _id: string = "";
+    get id(): string {return this._id};
 
-    protected async get(request: object) : Promise<Response>{
-        return await fetch(AppConfig.url, {
+    async get() : Promise<Response>{
+        return await fetch(Global.URL, {
             method: 'GET',
             headers: {
                 Accept: 'application/json',
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(request)
+            body: JSON.stringify(this)
         });
     }
 
-    protected async delete(request: object) : Promise<Response>{
-        return await fetch(AppConfig.url, {
+    async delete() : Promise<Response>{
+        return await fetch(Global.URL, {
             method: 'DELETE',
             headers: {
                 Accept: 'application/json',
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(request)
+            body: JSON.stringify(this._id)
         });
     }
 
-    protected async add(request: object) : Promise<Response>{
-        return await fetch(AppConfig.url, {
+    async add() : Promise<Response>{
+        return await fetch(Global.URL, {
             method: 'PUT',
             headers: {
                 Accept: 'application/json',
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(request)
+            body: JSON.stringify(this)
         });
     }
 
-    protected async update(request: object) : Promise<Response>{
-        return await fetch(AppConfig.url, {
+    async update() : Promise<Response>{
+        return await fetch(Global.URL, {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(request)
+            body: JSON.stringify(this)
         });
     }        
 }

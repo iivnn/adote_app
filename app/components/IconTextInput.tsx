@@ -43,7 +43,7 @@ export default function IconTextInput({config}: IIconTextInputConfig){
                             name={ !config.isValid && config.isTouched ? config.invalidIcon : config.icon } 
                             solid 
                             size={ config.textInputSize } 
-                            color={ (!config.isEditable && "lightgrey") || (!config.isValid && config.isTouched ? config.invalidIconColor : config.iconColor)}
+                            color={ ((!config.isEditable || config.isLoading ) && "lightgrey") || (!config.isValid && config.isTouched ? config.invalidIconColor : config.iconColor)}
                             style={ [ styles.border, {paddingTop: 12} ]}/>
                     }
 
@@ -76,9 +76,9 @@ export class IconTextInputConfig{
     constructor(
         public labelText: string = "none",        
         public labelFontSize: number = 15,
-        public labelColor: string = "black",
+        public labelColor: string = "",
         public icon: string = "empty-set",
-        public iconColor: ColorValue = "",
+        public iconColor: ColorValue = "black",
         public textInputSize: number = 18,
         public textInputColor: string = "black",
         public keyboardType: KeyboardTypeOptions = "default",
