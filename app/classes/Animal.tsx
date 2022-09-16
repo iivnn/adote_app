@@ -1,12 +1,9 @@
-import { getActionFromState } from "@react-navigation/native";;
-import HttpMethods from "./base/HttpMethods";
-import Base from "./base/HttpMethods";
+import Creatable from "./base/Creatable";
 
-export default class Animal extends HttpMethods<Animal>{
+export default class Animal extends Creatable<Animal>{
     constructor(
         public Name = ""    
     ){
-        super();
+        super(Animal);
     }
-
 }

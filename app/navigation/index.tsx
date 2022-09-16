@@ -20,7 +20,7 @@ const Stack = createStackNavigator<RootStackParamList>();
 function RootNavigator() {
   return (
     <Stack.Navigator> 
-        {/* <Stack.Screen name="Test" component={Testcreen} options={{ headerShown: false }} />        */}
+        <Stack.Screen name="Test" component={Testcreen} options={{ headerShown: false }} />       
         <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
         <Stack.Screen name="SignUp" component={SignUpScreen} options={{ headerShadowVisible: false, title: '' }} />
         <Stack.Screen name="Root" component={RootStackScreen} options={{ headerShown: true}} />     

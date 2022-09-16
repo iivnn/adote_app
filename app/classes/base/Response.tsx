@@ -11,8 +11,5 @@ export default class Response<type>{
     private _data: type | undefined | null;
     get data(): type | undefined | null { return this._data; }
 
-    private constructor() {}
-    
-    
-    
+    private constructor() {}   
 }

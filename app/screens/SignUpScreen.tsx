@@ -1,21 +1,9 @@
 import React from 'react';
-import { ActivityIndicator, Button, ImageBackground, KeyboardAvoidingView, Pressable, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
-import Toast from 'react-native-toast-message';
+import { ActivityIndicator, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import User from '../classes/User';
 import IconTextInput, { IconTextInputConfig } from '../components/IconTextInput';
 import Global from '../global/Global';
 import { Props } from '../navigation/types';
-
-const one = (email: string) => {
-        return new Promise<string>((resolve, reject) => {
-        setTimeout(() =>{
-            if(email == "email@email.com")
-                reject("rejeitou")
-            else
-                resolve("resolveu")    
-        }, 1000)
-    });
-}
 
 const SignUpScreen = ({ route, navigation }: Props) => {
     const [email, setEmail] = React.useState("");
@@ -45,10 +33,11 @@ const SignUpScreen = ({ route, navigation }: Props) => {
         setIsLoading(true);
         User.isEmailAvailable(email)
         .then((response) => {
-            console.log("🚀 ~ file: SignUpScreen.tsx ~ line 48 ~ .then ~ response", response)            
+            if(response.data.isEmailAvailable)
+                setIsEmailConfirmed(true);         
         })
         .catch((error) => {
-            console.log("🚀 ~ file: SignUpScreen.tsx ~ line 51 ~ constconfirm_onPressIn= ~ error", error)         
+                   
         })
         .finally(()=>{
             setIsLoading(false);
