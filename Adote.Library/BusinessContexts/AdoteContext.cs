@@ -14,7 +14,7 @@ namespace Adote.Library.BusinessContexts
 
         }
 
-        public DbSet<User>? Users { get; set; }
+        public DbSet<User> Users { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

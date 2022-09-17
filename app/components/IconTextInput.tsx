@@ -1,5 +1,5 @@
 import React from 'react';
-import { TextInput, View, Text, StyleSheet, KeyboardEventEasing, KeyboardTypeOptions, ColorValue } from 'react-native';
+import { TextInput, View, Text, StyleSheet, KeyboardTypeOptions, ColorValue } from 'react-native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
 export default function IconTextInput({config}: IIconTextInputConfig){
@@ -65,7 +65,6 @@ export default function IconTextInput({config}: IIconTextInputConfig){
             </View>
         </View>
     );
-
 }
 
 interface IIconTextInputConfig {
@@ -87,7 +86,7 @@ export class IconTextInputConfig{
         public inputBorderBottomColorOnFocus: string = "grey",
         public isValid: boolean = true,
         public invalidText: string = "",
-        public invalidTextFontSize: number = 14,
+        public invalidTextFontSize: number = 12,
         public invalidTextFontColor: string = "red",
         public invalidIcon: string = "times",
         public invalidIconColor: ColorValue = "red",

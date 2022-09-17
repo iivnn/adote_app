@@ -1,5 +1,6 @@
 import React from 'react';
 import { ActivityIndicator, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import Toast from 'react-native-toast-message';
 import User from '../classes/User';
 import IconTextInput, { IconTextInputConfig } from '../components/IconTextInput';
 import Global from '../global/Global';
@@ -12,6 +13,8 @@ const SignUpScreen = ({ route, navigation }: Props) => {
 
     const [name, setName] = React.useState("");
     const [isNameTouched, setIsNameTouched] = React.useState(false);
+    const [isNameValid, setIsNameValid] = React.useState(true);
+    const [nameInvalidText, setNameInvalidText] = React.useState("");
 
     const [phone, setPhone] = React.useState("");
     const [isPhoneTouched, setIsPhoneTouched] = React.useState(false);
@@ -28,43 +31,25 @@ const SignUpScreen = ({ route, navigation }: Props) => {
     const [isLoading, setIsLoading] = React.useState(false);
 
     const regexEmail = new RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
-    
-    const confirm_onPressIn = async () => {
-        setIsLoading(true);
-        User.isEmailAvailable(email)
-        .then((response) => {
-            if(response.data.isEmailAvailable)
-                setIsEmailConfirmed(true);         
-        })
-        .catch((error) => {
-                   
-        })
-        .finally(()=>{
-            setIsLoading(false);
-            setIsEmailTouched(true);
-        })       
-    }
-    
-    const signUp_onPressIn = async () => {
-        setIsNameTouched(true);
-        setIsPhoneTouched(true);
-        setIsZipTouched(true);
-        setIsPasswordTouched(true);
-        setIsConfirmPasswordTouched(true);
-
-    }
 
     const emailIconTextInputConfig_onInputValueChanged = (e: string) =>{
         setEmail(e);
         setIsEmailTouched(false);
     }
 
+    const nameIconTextInputConfig_onInputValueChanged = (e: string) =>{
+        setName(e);
+        if(isNameTouched){         
+            validateName(e);
+        }
+    } 
+
     const emailIconTextInputConfig = new IconTextInputConfig();
     emailIconTextInputConfig.icon = "at";
     emailIconTextInputConfig.keyboardType = "email-address";
     emailIconTextInputConfig.inputValue = email;
     emailIconTextInputConfig.onInputValueChanged = emailIconTextInputConfig_onInputValueChanged;
-    emailIconTextInputConfig.inputBorderBottomColorOnFocus = Global.Color.MAIN_COLOR;
+    emailIconTextInputConfig.inputBorderBottomColorOnFocus = Global.COLOR.MAIN_COLOR;
     emailIconTextInputConfig.labelFontSize = 30;
     emailIconTextInputConfig.labelText = "Meu e-mail é";
     emailIconTextInputConfig.isLoading = isLoading;
@@ -78,18 +63,21 @@ const SignUpScreen = ({ route, navigation }: Props) => {
     nameIconTextInputConfig.icon = "user";
     nameIconTextInputConfig.inputValue = name;
     nameIconTextInputConfig.keyboardType = "visible-password";
-    nameIconTextInputConfig.onInputValueChanged = setName;
-    nameIconTextInputConfig.inputBorderBottomColorOnFocus = Global.Color.MAIN_COLOR;
+    nameIconTextInputConfig.onInputValueChanged = nameIconTextInputConfig_onInputValueChanged;
+    nameIconTextInputConfig.inputBorderBottomColorOnFocus = Global.COLOR.MAIN_COLOR;
     nameIconTextInputConfig.labelText = "Nome";
     nameIconTextInputConfig.isLoading = isLoading;
     nameIconTextInputConfig.isTouched = isNameTouched;
+    nameIconTextInputConfig.isValid = isNameValid;
+    nameIconTextInputConfig.invalidText = nameInvalidText;
+    nameIconTextInputConfig.isEditable = !isLoading;
 
     const phoneIconTextInputConfig = new IconTextInputConfig();
     phoneIconTextInputConfig.icon = "phone";
     phoneIconTextInputConfig.keyboardType = "phone-pad";
     phoneIconTextInputConfig.inputValue = phone;
     phoneIconTextInputConfig.onInputValueChanged = setPhone;
-    phoneIconTextInputConfig.inputBorderBottomColorOnFocus = Global.Color.MAIN_COLOR;
+    phoneIconTextInputConfig.inputBorderBottomColorOnFocus = Global.COLOR.MAIN_COLOR;
     phoneIconTextInputConfig.labelText = "Telefone";
     phoneIconTextInputConfig.isLoading = isLoading;
     phoneIconTextInputConfig.isTouched = isPhoneTouched;
@@ -98,7 +86,7 @@ const SignUpScreen = ({ route, navigation }: Props) => {
     zipIconTextInputConfig.icon = "globe";
     zipIconTextInputConfig.inputValue = zip;
     zipIconTextInputConfig.onInputValueChanged = setZip;
-    zipIconTextInputConfig.inputBorderBottomColorOnFocus = Global.Color.MAIN_COLOR;
+    zipIconTextInputConfig.inputBorderBottomColorOnFocus = Global.COLOR.MAIN_COLOR;
     zipIconTextInputConfig.labelText = "CEP";
     zipIconTextInputConfig.isLoading = isLoading;
     zipIconTextInputConfig.keyboardType = "numeric";
@@ -108,7 +96,7 @@ const SignUpScreen = ({ route, navigation }: Props) => {
     passIconTextInputConfig.icon = "unlock";
     passIconTextInputConfig.inputValue = password;   
     passIconTextInputConfig.onInputValueChanged = setPassword;
-    passIconTextInputConfig.inputBorderBottomColorOnFocus = Global.Color.MAIN_COLOR;
+    passIconTextInputConfig.inputBorderBottomColorOnFocus = Global.COLOR.MAIN_COLOR;
     passIconTextInputConfig.labelText = "Senha";
     passIconTextInputConfig.isPassword = true;
     passIconTextInputConfig.isLoading = isLoading;
@@ -118,11 +106,84 @@ const SignUpScreen = ({ route, navigation }: Props) => {
     confirmPassIconTextInputConfig.icon = "unlock";
     confirmPassIconTextInputConfig.inputValue = confirmPassword;
     confirmPassIconTextInputConfig.onInputValueChanged = setConfirmPassword;
-    confirmPassIconTextInputConfig.inputBorderBottomColorOnFocus = Global.Color.MAIN_COLOR;
+    confirmPassIconTextInputConfig.inputBorderBottomColorOnFocus = Global.COLOR.MAIN_COLOR;
     confirmPassIconTextInputConfig.labelText = "Confirmar senha";
     confirmPassIconTextInputConfig.isPassword = true;
     confirmPassIconTextInputConfig.isLoading = isLoading;
     confirmPassIconTextInputConfig.isTouched = isConfirmPasswordTouched;
+
+    const confirm_onPressIn = async () => {
+        setIsLoading(true);
+        User.isEmailAvailable(email)
+        .then((response) => {
+            if(response.data)
+                setIsEmailConfirmed(true);
+            if(response.message){
+                Toast.show({
+                    type: response.message.typeString,
+                    text1: response.message.title,
+                    text2: response.message.text,
+                })
+            }
+            setIsEmailTouched(true);        
+        })
+        .catch((error) => {
+            setIsEmailTouched(false);             
+        })
+        .finally(()=>{
+            setIsLoading(false);
+        })       
+    }
+    
+    const signUp_onPressIn = async () => {
+        setIsNameTouched(true);
+        if(!validateName(name)){           
+            return;
+        }
+
+        const user = new User();
+        user.email = email;       
+        user.name = name;
+
+        setIsLoading(true);
+        user.add()
+        .then((response) => {
+            if(response.message){
+                Toast.show({
+                    type: response.message.typeString,
+                    text1: response.message.title,
+                    text2: response.message.text,
+                    visibilityTime: Global.TOAST.DEFAULT_TIME
+                });
+            }
+            if(response.success){
+                navigation.navigate("Login");
+            }         	      	
+        })
+        .catch((error) => {
+
+        })
+        .finally(() => {
+            setIsLoading(false);    
+        })
+    }
+
+    const validateName = (value: string): boolean =>{
+        if(value == ""){          
+            setIsNameValid(false);
+            setNameInvalidText("Nome é requerido.")
+            
+            return false;         
+        }
+        if(value.length > 255){
+            setIsNameValid(false);
+            setNameInvalidText("Nome não pode ter mais que 255 caracteres.")
+            return false;    
+        }
+
+        setIsNameValid(true);
+        return true;
+    }
 
     const renderEmailConfirm = () => {
         return(
@@ -157,8 +218,8 @@ const SignUpScreen = ({ route, navigation }: Props) => {
                 <IconTextInput config={passIconTextInputConfig}/>
                 <IconTextInput config={confirmPassIconTextInputConfig}/>
                 <TouchableOpacity 
-                        style={ (regexEmail.test(email) && !isLoading) ? styles.textEnterButtonEnabled : styles.textEnterButtonDisabled } 
-                        disabled={ (!regexEmail.test(email) || isLoading) }
+                        style={ (isNameValid && !isLoading) ? styles.textEnterButtonEnabled : styles.textEnterButtonDisabled } 
+                        disabled={ (!isNameValid || isLoading) }
                         onPressIn={signUp_onPressIn}>
                             <Text>CADASTRAR</Text>
                     </TouchableOpacity>
@@ -173,7 +234,7 @@ const SignUpScreen = ({ route, navigation }: Props) => {
                 !isEmailConfirmed ? renderEmailConfirm() : renderAccountForm()
             }           
             <View style={{alignItems: "stretch", justifyContent: "flex-end"}}>
-                <ActivityIndicator size="large" color={Global.Color.MAIN_COLOR} animating={isLoading} style={{marginTop: 100}}/>
+                <ActivityIndicator size="large" color={Global.COLOR.MAIN_COLOR} animating={isLoading} style={{marginTop: 100}}/>
             </View>            
         </ScrollView >
     );
@@ -199,6 +260,5 @@ const styles = StyleSheet.create({
         marginTop: 30
     }
   });
-
 
 export default SignUpScreen;
