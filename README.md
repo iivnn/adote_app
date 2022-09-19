@@ -1,2 +1,2 @@
 # adote_app
- Adote
+Em desenvolvimento..
