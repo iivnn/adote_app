@@ -17,16 +17,16 @@ namespace AdoteWebApplication
 
         public string Text { get; set; }
 
-        private MessageType _type = MessageType.Success;
+        private MessageType _messageType = MessageType.Success;
 
-        public MessageType Type
+        public MessageType MessageType
         {
             set
             {
-                _type = value;
+                _messageType = value;
             }
         }
-        public string TypeString { get => _type.ToString(); }
+        public string Type { get => _messageType.ToString(); }
 
         public static Message DefaultInternarlErroMessage
         {
@@ -36,7 +36,7 @@ namespace AdoteWebApplication
                 {
                     Title = "Erro",
                     Text = "Erro interno no servidor.",
-                    Type = MessageType.Error
+                    MessageType = MessageType.Error
                 };
             }
         }
@@ -51,7 +51,9 @@ namespace AdoteWebApplication
         }
 
         public static MessageType Success => new("success");
+
         public static MessageType Error => new("error");
+
         public static MessageType Information => new("info");
 
         public override string ToString()

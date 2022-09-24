@@ -15,12 +15,12 @@ export default function IconTextInput({config}: IIconTextInputConfig){
             borderBottomWidth: 2,
             borderBottomColor: (isInputFocused && config.inputBorderBottomColorOnFocus) || ((config.isLoading || !config.isEditable) && "lightgrey") || "black",
             paddingHorizontal: 10, 
-            paddingVertical: 7,
+            paddingVertical: 7
         }
     });
 
     return (
-        <View>
+        <View style={{marginBottom: 5}}>
             <View style={{ justifyContent: "flex-start", alignItems: "stretch", marginBottom: 10 }}>
                 <Text style={{fontSize: config.labelFontSize, color: config.labelColor}}>
                     { config.labelText ? config.labelText : "none" }
@@ -29,16 +29,13 @@ export default function IconTextInput({config}: IIconTextInputConfig){
             <View style={{ justifyContent: "flex-start", alignItems: "stretch", flexDirection:"row" }}>
                     {config.isTouched && config.isValid 
                         ?
-
                         <FontAwesome5 
                             name="check" 
                             solid 
                             size={ config.textInputSize } 
                             color="green" 
                             style={ [ styles.border, {paddingTop: 12} ]}/>
-
-                         :
-                         
+                         :                       
                         <FontAwesome5 
                             name={ !config.isValid && config.isTouched ? config.invalidIcon : config.icon } 
                             solid 
@@ -49,14 +46,15 @@ export default function IconTextInput({config}: IIconTextInputConfig){
 
                     <TextInput 
                         style={[styles.input, styles.border]}
-                        keyboardType={ config.keyboardType }
+                        keyboardType={ config.isPassword ? "default" : config.keyboardType }
                         value={ config.inputValue }
                         onChangeText={ (e) => { config.onInputValueChanged(e);} }
                         onBlur={ () => setIsInputFocused(false) }
                         onFocus={ () => setIsInputFocused(true) }
                         editable={ !(config.isLoading || !config.isEditable) }
                         secureTextEntry={config.isPassword}
-                        selectTextOnFocus={ !(config.isLoading || !config.isEditable)}/>
+                        selectTextOnFocus={ !(config.isLoading || !config.isEditable)}
+                        autoCapitalize={config.isPassword ? "none" : config.autoCapitalize}/>
             </View>
             <View style={{ justifyContent: "flex-start", alignItems: "stretch"}}>
                 <Text style={ {fontSize: config.invalidTextFontSize, color: config.invalidTextFontColor} }>
@@ -93,7 +91,8 @@ export class IconTextInputConfig{
         public isTouched: boolean = false,
         public isLoading: boolean = false,
         public isEditable: boolean = true,
-        public isPassword: boolean = false
+        public isPassword: boolean = false,
+        public autoCapitalize: 'none' | 'sentences' | 'words' | 'characters' | undefined = 'words'
     ){
     }
 }  

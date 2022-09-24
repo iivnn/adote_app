@@ -1,7 +1,9 @@
 using Adote.Library.BusinessContexts;
 using AdoteWebApplication;
 using AdoteWebApplication.Configs;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,7 +19,6 @@ builder.Services.AddMvc().AddJsonOptions(options =>
 
 builder.Services.AddDbContext<AdoteContext>(options =>
   options.UseSqlServer(builder.Configuration.GetConnectionString("AdoteContext")));
-
 
 var app = builder.Build();
 

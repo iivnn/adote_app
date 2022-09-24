@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
     },
     textWelcome: {
         color: 'white',
-        fontSize: 15,
+        fontSize: 18,
         textAlign: 'center',
         marginBottom: 15
     },
@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
     },
     texSignUp: {
         color: 'white',
-        fontSize: 13,
+        fontSize: 15,
         textAlign: 'center',
         marginBottom: 15
     }

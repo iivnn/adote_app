@@ -30,7 +30,7 @@ export default abstract class Creatable<T> {
             .catch((error) => {
                 if(error.response.data.message){                    
                     Toast.show({
-                        type: 'error',
+                        type: error.response.data.message.type,
                         text1: error.response.data.message.title,
                         text2: error.response.data.message.text,
                         visibilityTime: Global.TOAST.ERROR_TIME
@@ -54,6 +54,10 @@ export default abstract class Creatable<T> {
               if (Object.hasOwnProperty.call(value, k)) {
                 if(k == "_id"){
                     replacement["id"] = value[k];
+                    continue;
+                }
+                if(k == "_password"){
+                    replacement["password"] = value[k];
                     continue;
                 }
                 if(k.startsWith("_"))
