@@ -68,7 +68,7 @@ const SignUpScreen = ({ route, navigation }: Props) => {
     emailIconTextInputConfig.onInputValueChanged = emailIconTextInputConfig_onInputValueChanged;
     emailIconTextInputConfig.inputBorderBottomColorOnFocus = Global.COLOR.MAIN_COLOR;
     emailIconTextInputConfig.labelFontSize = 30;
-    emailIconTextInputConfig.labelText = "Meu e-mail é";
+    emailIconTextInputConfig.labelText = "Insira seu e-mail";
     emailIconTextInputConfig.isLoading = isLoading;
     emailIconTextInputConfig.isEditable = !isEmailConfirmed;
     emailIconTextInputConfig.isValid = isEmailConfirmed;
@@ -266,7 +266,7 @@ const SignUpScreen = ({ route, navigation }: Props) => {
                         style={ (regexEmail.test(email) && !isLoading) ? styles.textEnterButtonEnabled : styles.textEnterButtonDisabled } 
                         disabled={ (!regexEmail.test(email) || isLoading) }
                         onPressIn={confirm_onPressIn}>
-                            <Text>CONFIRMAR</Text>
+                        <Text>CONFIRMAR</Text>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -281,11 +281,11 @@ const SignUpScreen = ({ route, navigation }: Props) => {
                 <IconTextInput config={passIconTextInputConfig}/>
                 <IconTextInput config={confirmPassIconTextInputConfig}/>
                 <TouchableOpacity 
-                        style={ (isNameValid && !isLoading) ? styles.textEnterButtonEnabled : styles.textEnterButtonDisabled } 
-                        disabled={ (!isNameValid || !isPhoneValid || !isPasswordValid || isLoading)}
-                        onPressIn={signUp_onPressIn}>
-                            <Text>CADASTRAR</Text>
-                    </TouchableOpacity>
+                    style={ (isNameValid && !isLoading) ? styles.textEnterButtonEnabled : styles.textEnterButtonDisabled } 
+                    disabled={ (!isNameValid || !isPhoneValid || !isPasswordValid || isLoading)}
+                    onPressIn={signUp_onPressIn}>
+                    <Text>CADASTRAR</Text>
+                </TouchableOpacity>
             </View>
         )
     }    

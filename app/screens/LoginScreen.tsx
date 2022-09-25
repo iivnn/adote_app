@@ -21,7 +21,9 @@ const LoginScreen = ({ route, navigation }: Props) => {
                 <Text style={styles.textWelcome}>
                     Bem-vindo(a) ao aplicativo de adoção de animais de estimação! 👋
                 </Text>
-                <TouchableOpacity style={styles.texteEnterButton}>
+                <TouchableOpacity 
+                    style={styles.texteEnterButton}
+                    onPressIn={() => {navigation.navigate("SignIn")}}>
                     <Text>
                         ENTRAR
                     </Text>
@@ -55,7 +57,7 @@ const styles = StyleSheet.create({
         color: 'white',
         fontSize: 18,
         textAlign: 'center',
-        marginBottom: 15
+        marginBottom: 18
     },
     texteEnterButton: {
         width: 380,
@@ -63,7 +65,7 @@ const styles = StyleSheet.create({
         backgroundColor: "white",
         padding: 12,
         borderRadius: 30,
-        marginBottom: 160
+        marginBottom: 30
     },
     texSignUp: {
         color: 'white',
