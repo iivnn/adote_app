@@ -1,2 +1,3 @@
 # adote_app
- Adote
+Aplicativo para adoção de animais domésticos
+Em desenvolvimento..
