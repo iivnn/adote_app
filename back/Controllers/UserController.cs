@@ -2,7 +2,12 @@ using Adote.Library;
 using Adote.Library.BusinessContexts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
 using System.Net.Mail;
+using System.Security.Claims;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace AdoteWebApplication.Controllers
@@ -15,10 +20,13 @@ namespace AdoteWebApplication.Controllers
 
         private readonly AdoteContext _context;
 
-        public UserController(ILogger<UserController> logger, AdoteContext adoteContext)
+        private readonly IOptions<AppSettings> _appSettings;
+
+        public UserController(ILogger<UserController> logger, AdoteContext adoteContext, IOptions<AppSettings> appSettings)
         {
             _logger = logger;
             _context = adoteContext;
+            _appSettings = appSettings;
         }
 
         [HttpGet("IsEmailAvailable")]
@@ -107,8 +115,11 @@ namespace AdoteWebApplication.Controllers
                 }
 
                 User user = userModel.Cast();
+                user.EncryptPassword();
                 _context.Users.Add(user);
                 _context.SaveChanges();
+
+                user.Password = null;
 
                 Response.StatusCode = StatusCodes.Status201Created;
                 return new AdoteResponse<User>()
@@ -226,6 +237,102 @@ namespace AdoteWebApplication.Controllers
         //        return new AdoteResponse() { Sucess = false, Message = Message.DefaultInternarlErroMessage };
         //    }
         //}
+
+
+        [HttpPost("Authenticate")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public AdoteResponse<User> Authenticate(string email, string password)
+        {
+            try
+            {
+                var user = _context.Users.Where(u => u.Email == email).ToList();
+                if(user == null || user.Count == 0)
+                {
+                    return new AdoteResponse<User>()
+                    {
+                        Data = null,
+                        Success = false,
+                        Message = new Message()
+                        {
+                            Title = "Erro",
+                            Text = "Usuário não existe.",
+                            MessageType = MessageType.Error,
+                        }
+                    };
+                }
+
+                var encryptedPassword = UserModel.EncryptPassword(password);
+
+                if (user[0].Password != encryptedPassword)
+                {
+                    return new AdoteResponse<User>()
+                    {
+                        Data = null,
+                        Success = false,
+                        Message = new Message()
+                        {
+                            Title = "Erro",
+                            Text = "Senha inválida.",
+                            MessageType = MessageType.Error,
+                        }
+                    };
+                }
+
+
+
+                var token = GenerateJwtToken(user[0]);
+
+                user[0].Password = null;
+                user[0].Token = token;
+
+                return new AdoteResponse<User>()
+                {
+                    Data = user[0],
+                    Success = true,
+                    Message = new Message()
+                    {
+                        Title = "Sucesso",
+                        Text = "Usuário autenticado com sucesso.",
+                        MessageType = MessageType.Success,
+                    }
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                Response.StatusCode = StatusCodes.Status500InternalServerError;
+                return new AdoteResponse<User>() { Success = false, Message = Message.DefaultInternarlErroMessage };
+            }
+        }
+
+
+        [HttpGet("teste")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Helpers.Authorize]
+        public string teste(string email)
+        {
+            return "kkkkk";
+        }
+
+        private string GenerateJwtToken(User user)
+        {
+            // generate token that is valid for 7 days
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(_appSettings.Value.Secret);
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new[] { new Claim("id", user.Id.ToString()) }),
+                Expires = DateTime.UtcNow.AddDays(1),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            };
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            return tokenHandler.WriteToken(token);
+        }
 
         private bool IsEmailAvailable(string email, out Message? message)
         {

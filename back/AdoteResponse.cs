@@ -40,6 +40,19 @@ namespace AdoteWebApplication
                 };
             }
         }
+
+        public static Message DefaultUnauthorizedMessage
+        {
+            get
+            {
+                return new Message()
+                {
+                    Title = "Erro",
+                    Text = "Usuário não autenticado.",
+                    MessageType = MessageType.Error
+                };
+            }
+        }
     }
 
     public class MessageType

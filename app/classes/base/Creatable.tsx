@@ -56,10 +56,6 @@ export default abstract class Creatable<T> {
                     replacement["id"] = value[k];
                     continue;
                 }
-                if(k == "_password"){
-                    replacement["password"] = value[k];
-                    continue;
-                }
                 if(k.startsWith("_"))
                     continue;
                 replacement[k] = value[k];

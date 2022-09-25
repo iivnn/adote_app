@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
         backgroundColor: "white",
         padding: 12,
         borderRadius: 30,
-        marginBottom: 30
+        marginBottom: 80
     },
     texSignUp: {
         color: 'white',
