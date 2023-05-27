@@ -60,7 +60,7 @@ namespace AdoteWebApplication
         private string _value = string.Empty;
         private MessageType(string value)
         {
-            _value = value; 
+            _value = value;
         }
 
         public static MessageType Success => new("success");

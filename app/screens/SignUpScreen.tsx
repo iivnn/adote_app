@@ -138,12 +138,22 @@ const SignUpScreen = ({ route, navigation }: Props) => {
                 Toast.show({
                     type: response.message.type,
                     text1: response.message.title,
-                    text2: response.message.text,
+                    text2: response.message.text
                 })
             }
             setIsEmailTouched(true);        
         })
         .catch((error) => {
+            if(error.response){
+                Toast.show({
+                    type: 'error',
+                    text1: error.response.data.message.title,
+                    text2: error.response.data.message.text
+                })
+            }
+            else{
+                Toast.show(Global.handleError(error))
+            }
             setIsEmailTouched(false);             
         })
         .finally(()=>{
@@ -172,8 +182,7 @@ const SignUpScreen = ({ route, navigation }: Props) => {
                 Toast.show({
                     type: response.message.type,
                     text1: response.message.title,
-                    text2: response.message.text,
-                    visibilityTime: Global.TOAST.DEFAULT_TIME
+                    text2: response.message.text
                 });
             }
             if(response.success){

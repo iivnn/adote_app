@@ -1,6 +1,6 @@
-import Creatable from "./base/Creatable";
+import ApiClass from "./base/ApiClass";
 
-export default class Animal extends Creatable<Animal>{
+export default class Animal extends ApiClass<Animal>{
     constructor(
         public Name = ""    
     ){

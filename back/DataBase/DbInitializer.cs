@@ -7,7 +7,7 @@ namespace AdoteWebApplication
     {
         public static void Initialize(AdoteContext context)
         {
-            if(context.Users != null)
+            if (context.Users != null)
             {
                 if (context.Users.Any())
                 {

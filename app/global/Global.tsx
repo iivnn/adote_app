@@ -1,3 +1,6 @@
+import { AxiosError } from "axios";
+import { Message } from "../classes/base/AdoteResponse";
+
 const Global = {
     COLOR: {
         MAIN_COLOR: "darkturquoise"
@@ -5,13 +8,20 @@ const Global = {
     TOAST: {
         ERROR_COLOR: "red",
         SUCCESS_COLOR: "green",
-        INFO_COLOR: "deepskyblue",
-        ERROR_TIME: 8000,
-        SUCCESS_TIME: 8000,
-        INFO_TIME: 8000,
-        DEFAULT_TIME: 8000
+        INFO_COLOR: "deepskyblue"
     },
-    URL: "http://192.168.1.43:5083"
+    URL: "http://192.168.1.43:5083",
+    TIMEOUT: 1000 * 15,
+
+    handleError(erro: any): any{
+       if(erro instanceof AxiosError){
+        if(erro.code == "ECONNABORTED"){
+            return { type: 'error', text1: 'Erro', text2: 'O tempo limite da operação foi excedido.'};
+        }    
+       } 
+
+       return { type: 'error', text1: 'Erro', text2: 'Desculpe, ocorreu um erro desconhecido.'}; 
+    }
 }
 
 export default Global;

@@ -1,4 +1,4 @@
-export default class AdoteApp<T>{
+export default class AdoteAppResponse<T>{
     constructor(
         public message: Message,
         public data: T,

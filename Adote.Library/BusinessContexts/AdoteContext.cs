@@ -9,7 +9,7 @@ namespace Adote.Library.BusinessContexts
 {
     public class AdoteContext : DbContext
     {
-        public AdoteContext(DbContextOptions<AdoteContext> options): base(options)
+        public AdoteContext(DbContextOptions<AdoteContext> options) : base(options)
         {
 
         }

@@ -39,7 +39,7 @@ namespace AdoteWebApplication.Controllers
             {
                 Message message = null;
 
-                if(!IsEmailValid(email, out message))
+                if (!IsEmailValid(email, out message))
                 {
                     Response.StatusCode = StatusCodes.Status400BadRequest;
                     return new AdoteResponse<bool>()
@@ -50,7 +50,7 @@ namespace AdoteWebApplication.Controllers
                     };
                 }
 
-                if(!IsEmailAvailable(email, out message))
+                if (!IsEmailAvailable(email, out message))
                 {
                     Response.StatusCode = StatusCodes.Status200OK;
                     return new AdoteResponse<bool>()
@@ -74,12 +74,12 @@ namespace AdoteWebApplication.Controllers
                 _logger.LogError(ex, ex.Message);
                 Response.StatusCode = StatusCodes.Status500InternalServerError;
                 return new AdoteResponse<bool>() { Success = false, Message = Message.DefaultInternarlErroMessage };
-            }                    
+            }
         }
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]      
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public AdoteResponse<User> Add(UserModel? userModel)
         {
@@ -87,7 +87,7 @@ namespace AdoteWebApplication.Controllers
             {
                 Message message = null;
 
-                if(userModel == null)
+                if (userModel == null)
                 {
                     Response.StatusCode = StatusCodes.Status400BadRequest;
                     return new AdoteResponse<User>()
@@ -248,7 +248,7 @@ namespace AdoteWebApplication.Controllers
             try
             {
                 var user = _context.Users.Where(u => u.Email == email).ToList();
-                if(user == null || user.Count == 0)
+                if (user == null || user.Count == 0)
                 {
                     return new AdoteResponse<User>()
                     {
