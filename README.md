@@ -5,9 +5,6 @@ IMPORTANTE: Para execução da API é necessário instalar o ISS:
 
         Enable-WindowsOptionalFeature -Online -FeatureName IIS-WebServerRole, IIS-WebServer, IIS-CommonHttpFeatures, IIS-ManagementConsole, IIS-HttpErrors, IIS-HttpRedirect, IIS-WindowsAuthentication, IIS-StaticContent, IIS-DefaultDocument, IIS-HttpCompressionStatic, IIS-DirectoryBrowsing
 
-Banco de dados:
-    1-        
-
 API:
     1- No prompt execute o camando abaixo:
         ipconfig
@@ -15,6 +12,9 @@ API:
         "profiles" > "AdoteWebApplication" > "applicationUrl"
     3- Abra o solução no visual studio;
     4- Execute.
+
+Banco de dados:
+    1- Em ambiente de desenvolvimento será criado automaticamente o banco na instancia "(localdb)\mssqllocaldb" chamado "AdoteContext-0e9";       
 
 APP:
     1- No prompt comando execute o comando npm i;

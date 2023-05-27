@@ -16,9 +16,9 @@ namespace AdoteWebApplication
 
                 var users = new User[]
                 {
-                new User{ Email = "email@email.com", Name = "email" },
-                new User{ Email = "teste@teste.com", Name = "email" },
-                new User{ Email = "www@www.com", Name = "email" }
+                    new User{ Email = "email@email.com", Name = "email" },
+                    new User{ Email = "teste@teste.com", Name = "email" },
+                    new User{ Email = "www@www.com", Name = "email" }
                 };
 
                 context.Users.AddRange(users);
