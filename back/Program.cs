@@ -2,10 +2,8 @@ using Adote.Library.BusinessContexts;
 using AdoteWebApplication;
 using AdoteWebApplication.Configs;
 using AdoteWebApplication.Helpers;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
-using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -53,7 +51,7 @@ builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSet
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+//Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
