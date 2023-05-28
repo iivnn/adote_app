@@ -31,7 +31,6 @@ namespace AdoteWebApplication.Controllers
 
         [HttpGet("IsEmailAvailable")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public AdoteResponse<bool> IsEmailAvailable(string? email)
         {
@@ -79,7 +78,6 @@ namespace AdoteWebApplication.Controllers
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public AdoteResponse<User> Add(UserModel? userModel)
         {
@@ -241,7 +239,6 @@ namespace AdoteWebApplication.Controllers
 
         [HttpPost("Authenticate")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public AdoteResponse<User> Authenticate(string email, string password)
         {
@@ -280,8 +277,6 @@ namespace AdoteWebApplication.Controllers
                     };
                 }
 
-
-
                 var token = GenerateJwtToken(user[0]);
 
                 user[0].Password = null;
@@ -310,7 +305,6 @@ namespace AdoteWebApplication.Controllers
 
         [HttpGet("teste")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [Helpers.Authorize]

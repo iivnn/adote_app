@@ -18,16 +18,20 @@ namespace Adote.Library
     {
         [Required]
         [EmailAddress]
+        [MaxLength(255)]
         public string Email { get; set; } = string.Empty;
 
         [Required]
+        [MaxLength(255)]
         public string Name { get; set; } = string.Empty;
 
         [RegularExpression("^(?:(?:\\+|00)?(55)\\s?)?(?:\\(?([1-9][0-9])\\)?\\s?)?(?:((?:9\\d|[2-9])\\d{3})\\-?(\\d{4}))$", ErrorMessage = "The PhoneNumber field is not valid.")]
+        [MaxLength(255)]
         public string PhoneNumber { get; set; } = string.Empty;
 
         [Required]
         [MinLength(6)]
+        [MaxLength(255)]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public string Password { get; set; } = string.Empty;
 

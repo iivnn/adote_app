@@ -7,13 +7,14 @@ import Global from '../global/Global';
 import { Props } from '../navigation/types';
 
 const SignUpScreen = ({ route, navigation }: Props) => {
+
     const [email, setEmail] = React.useState("");
     const [isEmailConfirmed, setIsEmailConfirmed] = React.useState(false);
     const [isEmailTouched, setIsEmailTouched] = React.useState(false);
 
     const [name, setName] = React.useState("");
     const [isNameTouched, setIsNameTouched] = React.useState(false);
-    const [isNameValid, setIsNameValid] = React.useState(true);
+    const [isNameValid, setIsNameValid] = React.useState(false);
     const [nameInvalidText, setNameInvalidText] = React.useState("");
 
     const [phone, setPhone] = React.useState("");
@@ -23,10 +24,12 @@ const SignUpScreen = ({ route, navigation }: Props) => {
 
     const [password, setPassword] = React.useState("");
     const [isPasswordTouched, setIsPasswordTouched] = React.useState(false);
-    const [isPasswordValid, setIsPasswordValid] = React.useState(true);
+    const [isPasswordValid, setIsPasswordValid] = React.useState(false);
     const [passwordInvalidText, setPasswordInvalidText] = React.useState(""); 
 
     const [confirmPassword, setConfirmPassword] = React.useState("");
+
+    const [isFormDirty, setIsFormDirty] = React.useState(false);
 
     const [isLoading, setIsLoading] = React.useState(false);
 
@@ -40,10 +43,8 @@ const SignUpScreen = ({ route, navigation }: Props) => {
     }
 
     const nameIconTextInputConfig_onInputValueChanged = (e: string) =>{
-        setName(e);
-        if(isNameTouched){         
-            validateName(e);
-        }
+        setName(e);        
+        validateName(e);        
     }
 
     const phoneIconTextInputConfig_onInputValueChanged = (e: string) =>{
@@ -163,8 +164,11 @@ const SignUpScreen = ({ route, navigation }: Props) => {
     
     const signUp_onPressIn = async () => {       
         const phoneValid = validatePhone(phone);
+        setIsPhoneTouched(true);
         const nameValid = validateName(name);
+        setIsNameTouched(true);
         const passValid = validatePassword(password, confirmPassword);
+        setIsPasswordTouched(true);
 
         if(!phoneValid || !nameValid || !passValid)
             return;
@@ -197,8 +201,8 @@ const SignUpScreen = ({ route, navigation }: Props) => {
         })
     }
 
-    const validateName = (value: string) =>{
-        setIsNameTouched(true);
+    const validateName = (value: string) => {  
+        setIsFormDirty(true);      
         if(value == ""){          
             setIsNameValid(false);
             setNameInvalidText("Apelido é requerido.")
@@ -218,10 +222,8 @@ const SignUpScreen = ({ route, navigation }: Props) => {
     const validatePhone = (value: string) =>{
         if(value == ""){
             setIsPhoneValid(true);
-            setIsPhoneTouched(false);
             return true;
         }
-        setIsPhoneTouched(true);
         if(!regexPhone.test(value)){
             setIsPhoneValid(false);
             setPhoneInvalidText("Telefone inválido.")
@@ -229,10 +231,10 @@ const SignUpScreen = ({ route, navigation }: Props) => {
         }
 
         setIsPhoneValid(true);
+        return true;
     }
 
-    const validatePassword = (value: string, confirm: string) =>{
-        setIsPasswordTouched(true);
+    const validatePassword = (value: string, confirm: string) => {
         if(value == ""){
             setIsPasswordValid(false);
             setPasswordInvalidText("Senha é requerido.")
@@ -283,6 +285,7 @@ const SignUpScreen = ({ route, navigation }: Props) => {
     }
 
     const renderAccountForm = () =>{
+        console.log(!isNameValid + "" + !isPhoneValid + !isPasswordValid + isLoading)
         return(
             <View>
                 <IconTextInput config={nameIconTextInputConfig}/>
@@ -290,8 +293,8 @@ const SignUpScreen = ({ route, navigation }: Props) => {
                 <IconTextInput config={passIconTextInputConfig}/>
                 <IconTextInput config={confirmPassIconTextInputConfig}/>
                 <TouchableOpacity 
-                    style={ (isNameValid && !isLoading) ? styles.textEnterButtonEnabled : styles.textEnterButtonDisabled } 
-                    disabled={ (!isNameValid || !isPhoneValid || !isPasswordValid || isLoading)}
+                    style={ (!isFormDirty || (isNameValid && isPhoneValid && isPasswordValid && !isLoading)) ? styles.textEnterButtonEnabled : styles.textEnterButtonDisabled } 
+                    disabled={ isFormDirty && (!isNameValid || !isPhoneValid || !isPasswordValid || isLoading) }
                     onPressIn={signUp_onPressIn}>
                     <Text>CADASTRAR</Text>
                 </TouchableOpacity>
