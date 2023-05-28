@@ -1,5 +1,4 @@
 import Toast from "react-native-toast-message";
-import Global from "../../global/Global";
 import AdoteResponse from "./AdoteResponse";
 import Client from "./Client";
 

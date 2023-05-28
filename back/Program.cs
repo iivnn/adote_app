@@ -62,12 +62,12 @@ if (app.Environment.IsDevelopment())
                     .SetIsOriginAllowed(origin => true)
                     .AllowCredentials());
 
-    //Simulate slowness
-    app.Use((context, next) =>
-    {
-        Thread.Sleep(3000);
-        return next(context);
-    });
+    ////Simulate slowness
+    //app.Use((context, next) =>
+    //{
+    //    Thread.Sleep(3000);
+    //    return next(context);
+    //});
 
     using (var scope = app.Services.CreateScope())
     {

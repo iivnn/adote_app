@@ -16,7 +16,6 @@ export default class User extends ApiClass<User>{
    
     static async isEmailAvailable(email: string): Promise<AdoteResponse<boolean>>{
         return new Promise<AdoteResponse<boolean>>((resolve, reject) => {
-            console.log(Client.defaults.timeout)
             Client.get("api/User/IsEmailAvailable", {
                 params: {email: email}
             })

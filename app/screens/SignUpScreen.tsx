@@ -285,7 +285,6 @@ const SignUpScreen = ({ route, navigation }: Props) => {
     }
 
     const renderAccountForm = () =>{
-        console.log(!isNameValid + "" + !isPhoneValid + !isPasswordValid + isLoading)
         return(
             <View>
                 <IconTextInput config={nameIconTextInputConfig}/>
