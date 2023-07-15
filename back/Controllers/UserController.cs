@@ -1,5 +1,6 @@
 using Adote.Library;
 using Adote.Library.BusinessContexts;
+using AdoteWebApplication.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -22,11 +23,14 @@ namespace AdoteWebApplication.Controllers
 
         private readonly IOptions<AppSettings> _appSettings;
 
-        public UserController(ILogger<UserController> logger, AdoteContext adoteContext, IOptions<AppSettings> appSettings)
+        private readonly IRSAKeyPairService _rSAKeyPairService;
+
+        public UserController(ILogger<UserController> logger, AdoteContext adoteContext, IOptions<AppSettings> appSettings, IRSAKeyPairService rSAKeyPairService)
         {
             _logger = logger;
             _context = adoteContext;
             _appSettings = appSettings;
+            _rSAKeyPairService = rSAKeyPairService;
         }
 
         [HttpGet("IsEmailAvailable")]
@@ -236,15 +240,37 @@ namespace AdoteWebApplication.Controllers
         //    }
         //}
 
+        [HttpGet("GetPublicKey")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public AdoteResponse<GetPublicKeyGetResponse> GetPublicKey()
+        {
+            try
+            {
+                var data = new GetPublicKeyGetResponse();
+
+                return new AdoteResponse<GetPublicKeyGetResponse>()
+                {
+                    Data = data,
+                    Success = true,
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                Response.StatusCode = StatusCodes.Status500InternalServerError;
+                return new AdoteResponse<GetPublicKeyGetResponse>() { Success = false, Message = Message.DefaultInternarlErroMessage };
+            }
+        }
 
         [HttpPost("Authenticate")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public AdoteResponse<User> Authenticate(string email, string password)
+        public AdoteResponse<User> Authenticate(AuthenticatePostRequest authenticatePostRequest)
         {
             try
             {
-                var user = _context.Users.Where(u => u.Email == email).ToList();
+                var user = _context.Users.Where(u => u.Email == authenticatePostRequest.Email).ToList();
                 if (user == null || user.Count == 0)
                 {
                     return new AdoteResponse<User>()
@@ -260,7 +286,7 @@ namespace AdoteWebApplication.Controllers
                     };
                 }
 
-                var encryptedPassword = UserModel.EncryptPassword(password);
+                var encryptedPassword = UserModel.EncryptPassword(authenticatePostRequest.Password);
 
                 if (user[0].Password != encryptedPassword)
                 {
@@ -313,11 +339,13 @@ namespace AdoteWebApplication.Controllers
             return "kkkkk";
         }
 
+        #region Private Methods
+
         private string GenerateJwtToken(User user)
         {
             // generate token that is valid for 7 days
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_appSettings.Value.Secret);
+            var key = Encoding.ASCII.GetBytes(_appSettings.Value.SecretJWT);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new[] { new Claim("id", user.Id.ToString()) }),
@@ -371,5 +399,20 @@ namespace AdoteWebApplication.Controllers
                 return false;
             }
         }
+
+        #endregion
     }
+
+    public class AuthenticatePostRequest
+    {
+        public string Email { get; set; }
+        public string Password { get; set; }
+    }
+
+    public class GetPublicKeyGetResponse
+    {
+        public Guid Id { get; set; }
+        public string PublicKey { get; set; }
+    }
+    
 }

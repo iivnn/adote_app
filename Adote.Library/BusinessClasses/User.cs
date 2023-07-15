@@ -39,17 +39,8 @@ namespace Adote.Library
         {
             if (string.IsNullOrEmpty(Password))
                 return;
-            else
-            {
-                byte[] bytes;
-                using (SHA256 mySHA256 = SHA256.Create())
-                {
-                    var encoding = new UTF8Encoding();
-                    bytes = encoding.GetBytes(Password);
-                    bytes = mySHA256.ComputeHash(bytes);
-                }
-                Password = Convert.ToBase64String(bytes);
-            }
+            else            
+                Password = User.EncryptPassword(Password);          
         }
 
         public static string EncryptPassword(string value)

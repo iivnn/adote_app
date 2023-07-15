@@ -1,5 +1,4 @@
 import { AxiosError } from "axios";
-import { Message } from "../classes/base/AdoteResponse";
 
 const Global = {
     COLOR: {

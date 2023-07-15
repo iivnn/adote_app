@@ -2,6 +2,7 @@ using Adote.Library.BusinessContexts;
 using AdoteWebApplication;
 using AdoteWebApplication.Configs;
 using AdoteWebApplication.Helpers;
+using AdoteWebApplication.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
@@ -48,6 +49,8 @@ builder.Services.AddDbContext<AdoteContext>(options =>
   options.UseSqlServer(builder.Configuration.GetConnectionString("AdoteContext")));
 
 builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
+
+builder.Services.AddSingleton<IRSAKeyPairService, RSAKeyPairService>()
 
 var app = builder.Build();
 

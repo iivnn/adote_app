@@ -1,6 +1,7 @@
 import Toast from "react-native-toast-message";
 import AdoteResponse from "./AdoteResponse";
 import Client from "./Client";
+import Global from "../../global/Global";
 
 
 export default abstract class ApiClass<T> {
@@ -28,14 +29,7 @@ export default abstract class ApiClass<T> {
                     resolve(adoteResponse);
                 })
                 .catch((error) => {
-                    if (error.response.data.message) {
-                        Toast.show({
-                            type: 'error',
-                            text1: error.response.data.message.title,
-                            text2: error.response.data.message.text
-                        });
-                        reject(error);
-                    }
+                    reject(Global.handleError(error));
                 });
         });
     }

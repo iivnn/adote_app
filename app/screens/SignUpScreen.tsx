@@ -133,8 +133,10 @@ const SignUpScreen = ({ route, navigation }: Props) => {
         setIsLoading(true);
         User.isEmailAvailable(email)
         .then((response) => {
-            if(response.data)
-                setIsEmailConfirmed(true);
+            if(!response.success)
+                setIsEmailConfirmed(false);
+            else if(response.data)
+                setIsEmailConfirmed(response.data);
             if(response.message){
                 Toast.show({
                     type: response.message.type,
@@ -145,17 +147,12 @@ const SignUpScreen = ({ route, navigation }: Props) => {
             setIsEmailTouched(true);        
         })
         .catch((error) => {
-            if(error.response){
-                Toast.show({
-                    type: 'error',
-                    text1: error.response.data.message.title,
-                    text2: error.response.data.message.text
-                })
-            }
-            else{
-                Toast.show(Global.handleError(error))
-            }
-            setIsEmailTouched(false);             
+            Toast.show({
+                type: error.type,
+                text1: error.text1,
+                text2: error.text2
+            })
+            setIsEmailTouched(true);             
         })
         .finally(()=>{
             setIsLoading(false);
@@ -194,7 +191,7 @@ const SignUpScreen = ({ route, navigation }: Props) => {
             }         	      	
         })
         .catch((error) => {
-
+            Toast.show(error)
         })
         .finally(() => {
             setIsLoading(false);    
