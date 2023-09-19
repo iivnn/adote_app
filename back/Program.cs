@@ -50,7 +50,7 @@ builder.Services.AddDbContext<AdoteContext>(options =>
 
 builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
 
-builder.Services.AddSingleton<IRSAKeyPairService, RSAKeyPairService>()
+builder.Services.AddSingleton<IRSAKeyPairService, RSAKeyPairService>();
 
 var app = builder.Build();
 

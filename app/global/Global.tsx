@@ -9,7 +9,7 @@ const Global = {
         SUCCESS_COLOR: "green",
         INFO_COLOR: "deepskyblue"
     },
-    URL: "http://192.168.1.43:5083",
+    URL: "http://localhost:5083",
     TIMEOUT: 1000 * 15,
 
     handleError(erro: any): any{

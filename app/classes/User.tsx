@@ -31,7 +31,7 @@ export default class User extends ApiClass<User>{
 
     static async authenticate(email: string, password: string): Promise<AdoteResponse<User>>{
         return new Promise<AdoteResponse<User>>((resolve, reject) => {
-            Client.post("api/User/Authenticate", {})
+            Client.post("api/User/Authenticate", {email: email, password: password})
             .then((response) => {               
                 const adoteResponse = (response.data as AdoteResponse<User>);
                 resolve(adoteResponse);        
