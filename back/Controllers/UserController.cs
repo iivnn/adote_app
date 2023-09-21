@@ -144,60 +144,6 @@ namespace AdoteWebApplication.Controllers
             }
         }
 
-        [HttpGet("ListUsers")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public AdoteResponse<List<User>> ListUsers()
-        {
-            try
-            {
-                List<User> users = _context.Users.ToList();
-                if (users.Count == 0)
-                {
-                    Response.StatusCode = 404;
-                    return new AdoteResponse<List<User>>()
-                    {
-                        Data = null,
-                        Success = false,
-                        Message = new Message()
-                        {
-                            Title = "Lista vazia",
-                            Text = "Não possui usuarios.",
-                            MessageType = MessageType.Error
-                        }
-                    };
-                }
-
-                return new AdoteResponse<List<User>>()
-                {
-                    Message = new Message()
-                    {
-                        Title = "Lista contem objetos",
-                        Text = "Funcionando",
-                        MessageType = MessageType.Success
-                    },
-                    Data = users,
-                    Success = true,
-                };
-            }
-            catch (Exception ex)
-            {
-                Response.StatusCode = 500;
-                return new AdoteResponse<List<User>>()
-                {
-                    Data = null,
-                    Success = false,
-                    Message = new Message()
-                    {
-                        Title = "Error",
-                        Text = ex.Message,
-                        MessageType = MessageType.Error
-                    }
-                };
-            }
-        }
-
         [HttpDelete]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -216,7 +162,7 @@ namespace AdoteWebApplication.Controllers
                         Success = false,
                         Message = new Message()
                         {
-                            Title = "Error",
+                            Title = "Erro",
                             Text = "O usuário não existe.",
                             MessageType = MessageType.Error
                         }
@@ -241,6 +187,7 @@ namespace AdoteWebApplication.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, ex.Message);
                 Response.StatusCode = 500;
                 return new AdoteResponse<User>() { Success = false, Message = Message.DefaultInternarlErroMessage };
             }
@@ -264,7 +211,7 @@ namespace AdoteWebApplication.Controllers
                         Success = false,
                         Message = new Message()
                         {
-                            Title = "Error",
+                            Title = "Erro",
                             Text = "O usuário não existe.",
                             MessageType = MessageType.Error
                         }
@@ -293,6 +240,7 @@ namespace AdoteWebApplication.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, ex.Message);
                 Response.StatusCode = 500;
                 return new AdoteResponse<User>() { Success = false, Message = Message.DefaultInternarlErroMessage };
             }
@@ -384,17 +332,6 @@ namespace AdoteWebApplication.Controllers
                 Response.StatusCode = StatusCodes.Status500InternalServerError;
                 return new AdoteResponse<User>() { Success = false, Message = Message.DefaultInternarlErroMessage };
             }
-        }
-
-
-        [HttpGet("teste")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        [Helpers.Authorize]
-        public string teste(string email)
-        {
-            return "kkkkk";
         }
 
         #region Private Methods
