@@ -144,101 +144,159 @@ namespace AdoteWebApplication.Controllers
             }
         }
 
-        //[HttpDelete]
-        //[ProducesResponseType(StatusCodes.Status200OK)]
-        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
-        //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        //public AdoteResponse Delete(Guid userId)
-        //{
-        //    try
-        //    {
-        //        List<User> users = _context.Users.Where(u => u.Id == userId).ToList();
-        //        if(users.Count == 0)
-        //        {
-        //            Response.StatusCode = 200;
-        //            return new AdoteResponse()
-        //            {
-        //                Data = false,
-        //                Sucess = false,
-        //                Message = new Message()
-        //                {
-        //                    Title = "Error",
-        //                    Text = "O usuário não existe.",
-        //                    Type = MessageTypeEnum.Error
-        //                }
-        //            };
-        //        }
+        [HttpGet("ListUsers")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public AdoteResponse<List<User>> ListUsers()
+        {
+            try
+            {
+                List<User> users = _context.Users.ToList();
+                if (users.Count == 0)
+                {
+                    Response.StatusCode = 404;
+                    return new AdoteResponse<List<User>>()
+                    {
+                        Data = null,
+                        Success = false,
+                        Message = new Message()
+                        {
+                            Title = "Lista vazia",
+                            Text = "Não possui usuarios.",
+                            MessageType = MessageType.Error
+                        }
+                    };
+                }
 
-        //        _context.Users.Remove(users[0]);
-        //        _context.SaveChanges();
+                return new AdoteResponse<List<User>>()
+                {
+                    Message = new Message()
+                    {
+                        Title = "Lista contem objetos",
+                        Text = "Funcionando",
+                        MessageType = MessageType.Success
+                    },
+                    Data = users,
+                    Success = true,
+                };
+            }
+            catch (Exception ex)
+            {
+                Response.StatusCode = 500;
+                return new AdoteResponse<List<User>>()
+                {
+                    Data = null,
+                    Success = false,
+                    Message = new Message()
+                    {
+                        Title = "Error",
+                        Text = ex.Message,
+                        MessageType = MessageType.Error
+                    }
+                };
+            }
+        }
 
-        //        Response.StatusCode = 200;
-        //        return new AdoteResponse()
-        //        {
-        //            Data = true,
-        //            Sucess = true,
-        //            Message = new Message()
-        //            {
-        //                Title = "Sucesso",
-        //                Text = "Usuário excluido com sucesso.",
-        //                Type = MessageTypeEnum.Success
-        //            }
-        //        };
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Response.StatusCode = 500;
-        //        return new AdoteResponse() { Sucess = false, Message = Message.DefaultInternarlErroMessage };
-        //    }
-        //}
+        [HttpDelete]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public AdoteResponse<User> Delete(Guid userId)
+        {
+            try
+            {
+                List<User> users = _context.Users.Where(u => u.Id == userId).ToList();
+                if (users.Count == 0)
+                {
+                    Response.StatusCode = 404;
+                    return new AdoteResponse<User>()
+                    {
+                        Data = null,
+                        Success = false,
+                        Message = new Message()
+                        {
+                            Title = "Error",
+                            Text = "O usuário não existe.",
+                            MessageType = MessageType.Error
+                        }
+                    };
+                }
 
-        //[HttpPut]
-        //[ProducesResponseType(StatusCodes.Status200OK)]
-        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
-        //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        //public AdoteResponse Update(User user)
-        //{
-        //    try
-        //    {
-        //        List<User> users = _context.Users.Where(u => u.Id == user.Id).ToList();
-        //        if (users.Count == 0)
-        //        {
-        //            Response.StatusCode = 200;
-        //            return new AdoteResponse()
-        //            {
-        //                Data = null,
-        //                Sucess = false,
-        //                Message = new Message()
-        //                {
-        //                    Title = "Error",
-        //                    Text = "O usuário não existe.",
-        //                    Type = MessageTypeEnum.Error
-        //                }
-        //            };
-        //        }
+                _context.Users.Remove(users[0]);
+                _context.SaveChanges();
 
-        //        _context.Users.Update(user);
-        //        _context.SaveChanges();
+                Response.StatusCode = 200;
+                return new AdoteResponse<User>()
+                {
+                    Data = null,
+                    Success = true,
+                    Message = new Message()
+                    {
+                        Title = "Sucesso",
+                        Text = "Usuário excluido com sucesso.",
+                        MessageType = MessageType.Success
+                    }
+                };
+            }
+            catch (Exception ex)
+            {
+                Response.StatusCode = 500;
+                return new AdoteResponse<User>() { Success = false, Message = Message.DefaultInternarlErroMessage };
+            }
+        }
 
-        //        Response.StatusCode = 200;
-        //        return new AdoteResponse()
-        //        {
-        //            Data = user,
-        //            Sucess = true,
-        //            Message = new Message()
-        //            {
-        //                Title = "Sucesso",
-        //                Text = "Usuário Alterado com sucesso.",
-        //                Type = MessageTypeEnum.Success
-        //            }
-        //        };
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Response.StatusCode = 500;
-        //        return new AdoteResponse() { Sucess = false, Message = Message.DefaultInternarlErroMessage };
-        //    }
-        //}
+        [HttpPut]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public AdoteResponse<User> Update(Guid idUser, UserModel? userModel)
+        {
+            try
+            {
+                UserModel user = _context.Users.Find(idUser);
+                if (user == null)
+                {
+                    Response.StatusCode = 404;
+                    return new AdoteResponse<User>()
+                    {
+                        Data = null,
+                        Success = false,
+                        Message = new Message()
+                        {
+                            Title = "Error",
+                            Text = "O usuário não existe.",
+                            MessageType = MessageType.Error
+                        }
+                    };
+                }
+
+                user.Name = userModel!.Name;
+                user.Email = userModel!.Email;
+                user.Password = userModel!.Password;
+                user.PhoneNumber = userModel!.PhoneNumber;
+
+                _context.SaveChanges();
+              
+                Response.StatusCode = 200;
+                return new AdoteResponse<User>()
+                {
+                    Data = null,
+                    Success = true,
+                    Message = new Message()
+                    {
+                        Title = "Sucesso",
+                        Text = "Usuário Alterado com sucesso.",
+                        MessageType = MessageType.Success
+                    }
+                };
+            }
+            catch (Exception ex)
+            {
+                Response.StatusCode = 500;
+                return new AdoteResponse<User>() { Success = false, Message = Message.DefaultInternarlErroMessage };
+            }
+        }
 
         [HttpGet("GetPublicKey")]
         [ProducesResponseType(StatusCodes.Status200OK)]
