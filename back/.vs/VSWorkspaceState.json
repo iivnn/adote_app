@@ -1,8 +1,12 @@
 {
   "ExpandedNodes": [
     "",
-    "\\Controllers"
+    "\\Controllers",
+    "\\DataBase",
+    "\\Helpers",
+    "\\Properties",
+    "\\Services"
   ],
-  "SelectedNode": "\\Controllers\\UserController.cs",
+  "SelectedNode": "\\AdoteWebApplication.sln",
   "PreviewInSolutionExplorer": false
 }
